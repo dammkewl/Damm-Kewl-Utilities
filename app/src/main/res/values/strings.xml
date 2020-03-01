@@ -1,7 +1,12 @@
 <resources>
+
     <string name="app_name">Damm Kewl Utilities</string>
     <string name="TitleLauncher">Damm Kewl Utilities</string>
+
     <string name="TitleHashAnything">Hash Anything</string>
+    <string name="pick_your_algorithm">Pick your algorithm</string>
+    <string name="pick_your_input">Pick your input</string>
+
     <string name="TitleFilePicker">File Picker</string>
 
 </resources>

@@ -4,11 +4,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import androidx.annotation.IdRes;
 import androidx.appcompat.app.AppCompatActivity;
 
 import org.conscrypt.OpenSSLMessageDigestJDK;
@@ -30,6 +28,8 @@ import java.util.stream.Stream;
 import nl.damm.util.R;
 import nl.damm.util.file.FilePickerActivity;
 import nl.damm.util.stream.Collectors;
+
+import static nl.damm.util.widget.SpinnerUtils.spinMeUp;
 
 public class HashAnythingActivity extends AppCompatActivity {
 
@@ -53,6 +53,7 @@ public class HashAnythingActivity extends AppCompatActivity {
         setContentView(R.layout.activity_hash_anything);
 
         Spinner algoSpinner = spinMeUp(
+                this,
                 R.id.hashAlgoSpinner,
                 servicesProvidingAlgos.keySet().toArray(new String[servicesProvidingAlgos.size()])
         );
@@ -60,6 +61,7 @@ public class HashAnythingActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 spinMeUp(
+                        HashAnythingActivity.this,
                         R.id.hashServiceSpinner,
                         servicesProvidingAlgos.get(parent.getItemAtPosition(position)).toArray(new Service[0])
                 );
@@ -68,6 +70,7 @@ public class HashAnythingActivity extends AppCompatActivity {
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
                 spinMeUp(
+                        HashAnythingActivity.this,
                         R.id.hashServiceSpinner,
                         new String[0]
                 );
@@ -75,38 +78,31 @@ public class HashAnythingActivity extends AppCompatActivity {
         });
     }
 
-    private <T> Spinner spinMeUp(@IdRes int id, T[] items) {
-        ArrayAdapter<T> adapter = new ArrayAdapter<>(
-                this,
-                android.R.layout.simple_spinner_item,
-                items
-        );
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        Spinner spinner = findViewById(id);
-        spinner.setAdapter(adapter);
-        return spinner;
-    }
-
     public void hashMe(View view) throws NoSuchAlgorithmException {
         Spinner spinner = findViewById(R.id.hashServiceSpinner);
         System.out.println("SPINNER HEIGHT"+spinner.getHeight());
         Service service = (Service) spinner.getSelectedItem();
-        TextView inText = findViewById(R.id.hashInputText);//EditText?
-        TextView outText = findViewById(R.id.hashOutputText);//EditText?
-        Object serviceItem = service.newInstance(null);
-        for(Class<?> x = serviceItem.getClass(); x != null; x = x.getSuperclass()) {
-            System.out.println("diggity: "+x.getCanonicalName());
+        if(true) {
+            throw null;
         }
-        MessageDigestSpi digest = (MessageDigestSpi) serviceItem;
-        if(digest instanceof MessageDigest) {
-            byte[] outBytes = ((MessageDigest)digest).digest(inText.getText().toString().getBytes());
+        //TODO: get from fragment
+//        TextView inText = findViewById(R.id.hashInputTextDeprecated);//EditText?
 
-            outText.setText(new BigInteger(outBytes).toString(16));
-        } else if(digest instanceof OpenSSLMessageDigestJDK) {
-            throw new IllegalStateException("No support yet for conscrypt");
-        } else {
-            throw new NoSuchAlgorithmException("Found non-comprehensive digest class type: "+digest.getClass().getCanonicalName());
-        }
+//        TextView outText = findViewById(R.id.hashOutputText);//EditText?
+//        Object serviceItem = service.newInstance(null);
+//        for(Class<?> x = serviceItem.getClass(); x != null; x = x.getSuperclass()) {
+//            System.out.println("diggity: "+x.getCanonicalName());
+//        }
+//        MessageDigestSpi digest = (MessageDigestSpi) serviceItem;
+//        if(digest instanceof MessageDigest) {
+//            byte[] outBytes = ((MessageDigest)digest).digest(inText.getText().toString().getBytes());
+//
+//            outText.setText(new BigInteger(outBytes).toString(16));
+//        } else if(digest instanceof OpenSSLMessageDigestJDK) {
+//            throw new IllegalStateException("No support yet for conscrypt");
+//        } else {
+//            throw new NoSuchAlgorithmException("Found non-comprehensive digest class type: "+digest.getClass().getCanonicalName());
+//        }
     }
 
     public void showFilePicker(View view) {
