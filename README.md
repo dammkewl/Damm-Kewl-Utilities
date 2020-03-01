@@ -1,2 +1,2 @@
-# Damm-Kewl-Utilities
+# Damm Kewl Utilities
 An android app for some utilities.
