@@ -46,6 +46,7 @@ public class SupplyTextFragment extends Fragment {
                 charsets.values().toArray()
         );
 
+        //This will be what most people use right? Or is it UTF-16 nowadays since all the extensions?
         if(charsets.containsKey("UTF-8")) {
             p.setSelection(charsets.headMap("UTF-8").size());
         }

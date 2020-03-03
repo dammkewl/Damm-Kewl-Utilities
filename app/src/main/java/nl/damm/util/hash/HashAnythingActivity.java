@@ -63,11 +63,24 @@ public class HashAnythingActivity extends AppCompatActivity {
         algoSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                spinMeUp(
+                Service[] services = servicesProvidingAlgos.get(parent.getItemAtPosition(position)).toArray(new Service[0]);
+                Spinner spinner = spinMeUp(
                         HashAnythingActivity.this,
                         R.id.hashServiceSpinner,
-                        servicesProvidingAlgos.get(parent.getItemAtPosition(position)).toArray(new Service[0])
+                        services
                 );
+
+                //preselect algo's we can actually do something with (maybe filter the shit ones too?)
+                for(int i = 0; i < services.length; ++i) {
+                    try {
+                        if(MessageDigest.class.isAssignableFrom(Class.forName(services[i].getClassName()))) {
+                            spinner.setSelection(i);
+                            break;
+                        }
+                    } catch (ClassNotFoundException e) {
+                        continue;
+                    }
+                }
             }
 
             @Override
@@ -80,6 +93,7 @@ public class HashAnythingActivity extends AppCompatActivity {
             }
         });
 
+        //until we make a "remember" feature, just preselect what most people will be looking for
         algoSpinner.setSelection(servicesProvidingAlgos.headMap("SHA-256").size());
 
     }
