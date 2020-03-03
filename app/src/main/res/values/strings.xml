@@ -8,5 +8,6 @@
     <string name="pick_your_input">Pick your input</string>
 
     <string name="TitleFilePicker">File Picker</string>
+    <string name="input_text_here">Input text here</string>
 
 </resources>

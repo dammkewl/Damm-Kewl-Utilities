@@ -23,6 +23,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.SortedMap;
+import java.util.TreeMap;
 import java.util.stream.Stream;
 
 import nl.damm.util.R;
@@ -34,13 +36,13 @@ import static nl.damm.util.widget.SpinnerUtils.spinMeUp;
 public class HashAnythingActivity extends AppCompatActivity {
 
     private static final String serviceTypeNameForHashAlgos = MessageDigest.class.getSimpleName();
-    private static final Map<String, Collection<Service>> servicesProvidingAlgos = Collections.unmodifiableMap(
+    private static final SortedMap<String, Collection<Service>> servicesProvidingAlgos = Collections.unmodifiableSortedMap(
             Stream.of(Security.getProviders())
                     .map(Provider::getServices)
                     .flatMap(Collection::stream)
                     .filter(s -> serviceTypeNameForHashAlgos.equals(s.getType()))
                     .collect(Collectors.toIdentity(
-                            new HashMap<>(),
+                            new TreeMap<>(),
                             (map, service) -> map.computeIfAbsent(service.getAlgorithm(), key -> new HashSet<>())
                                     .add(service)
 
@@ -57,6 +59,7 @@ public class HashAnythingActivity extends AppCompatActivity {
                 R.id.hashAlgoSpinner,
                 servicesProvidingAlgos.keySet().toArray(new String[servicesProvidingAlgos.size()])
         );
+
         algoSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -76,6 +79,9 @@ public class HashAnythingActivity extends AppCompatActivity {
                 );
             }
         });
+
+        algoSpinner.setSelection(servicesProvidingAlgos.headMap("SHA-256").size());
+
     }
 
     public void hashMe(View view) throws NoSuchAlgorithmException {

@@ -11,8 +11,10 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Spinner;
 
 import java.nio.charset.Charset;
+import java.util.SortedMap;
 
 import nl.damm.util.R;
 import nl.damm.util.widget.SpinnerUtils;
@@ -36,11 +38,17 @@ public class SupplyTextFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        SpinnerUtils.spinMeUp(
+        SortedMap<String,Charset> charsets = Charset.availableCharsets();
+
+        Spinner p = SpinnerUtils.spinMeUp(
                 this.getActivity(),
                 R.id.charsetSpinner,
-                Charset.availableCharsets().values().toArray()
+                charsets.values().toArray()
         );
+
+        if(charsets.containsKey("UTF-8")) {
+            p.setSelection(charsets.headMap("UTF-8").size());
+        }
 
         mViewModel = ViewModelProviders.of(this).get(SupplyTextViewModel.class);
         // TODO: Use the ViewModel
