@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.Spinner;
 
 import java.nio.charset.Charset;
@@ -22,10 +23,6 @@ import nl.damm.util.widget.SpinnerUtils;
 public class SupplyTextFragment extends Fragment {
 
     private SupplyTextViewModel mViewModel;
-
-    public static SupplyTextFragment newInstance() {
-        return new SupplyTextFragment();
-    }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -52,6 +49,9 @@ public class SupplyTextFragment extends Fragment {
         }
 
         mViewModel = ViewModelProviders.of(this).get(SupplyTextViewModel.class);
-        // TODO: Use the ViewModel
+
+        EditText e = this.getActivity().findViewById(R.id.hashInputText);
+        e.setText(mViewModel.val);
+        e.setOnEditorActionListener((v, actionId, event) -> {mViewModel.val = e.getText().toString(); return false;});
     }
 }
