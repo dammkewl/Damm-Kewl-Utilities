@@ -102,27 +102,24 @@ public class HashAnythingActivity extends AppCompatActivity {
         Spinner spinner = findViewById(R.id.hashServiceSpinner);
         System.out.println("SPINNER HEIGHT"+spinner.getHeight());
         Service service = (Service) spinner.getSelectedItem();
-        if(true) {
-            throw null;
-        }
-        //TODO: get from fragment
-//        TextView inText = findViewById(R.id.hashInputTextDeprecated);//EditText?
 
-//        TextView outText = findViewById(R.id.hashOutputText);//EditText?
-//        Object serviceItem = service.newInstance(null);
-//        for(Class<?> x = serviceItem.getClass(); x != null; x = x.getSuperclass()) {
-//            System.out.println("diggity: "+x.getCanonicalName());
-//        }
-//        MessageDigestSpi digest = (MessageDigestSpi) serviceItem;
-//        if(digest instanceof MessageDigest) {
-//            byte[] outBytes = ((MessageDigest)digest).digest(inText.getText().toString().getBytes());
-//
-//            outText.setText(new BigInteger(outBytes).toString(16));
-//        } else if(digest instanceof OpenSSLMessageDigestJDK) {
-//            throw new IllegalStateException("No support yet for conscrypt");
-//        } else {
-//            throw new NoSuchAlgorithmException("Found non-comprehensive digest class type: "+digest.getClass().getCanonicalName());
-//        }
+        SupplyTextViewModel model = SupplyTextFragment.getModel(this, R.id.supplyHashInputTextFragment);
+        
+        TextView outText = findViewById(R.id.hashOutputText);//EditText?
+        Object serviceItem = service.newInstance(null);
+        for(Class<?> x = serviceItem.getClass(); x != null; x = x.getSuperclass()) {
+            System.out.println("diggity: "+x.getCanonicalName());
+        }
+        MessageDigestSpi digest = (MessageDigestSpi) serviceItem;
+        if(digest instanceof MessageDigest) {
+            byte[] outBytes = ((MessageDigest)digest).digest(model.getCharset().encode(model.getTextValue()).array());
+
+            outText.setText(new BigInteger(outBytes).toString(16));
+        } else if(digest instanceof OpenSSLMessageDigestJDK) {
+            throw new IllegalStateException("No support yet for conscrypt");
+        } else {
+            throw new NoSuchAlgorithmException("Found non-comprehensive digest class type: "+digest.getClass().getCanonicalName());
+        }
     }
 
     public void showFilePicker(View view) {

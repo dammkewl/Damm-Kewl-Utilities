@@ -6,31 +6,50 @@ import android.content.SharedPreferences;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.ViewModel;
 
-import nl.damm.util.R;
+import java.nio.charset.Charset;
 
 public class SupplyTextViewModel extends AndroidViewModel {
 
-//    final LiveData<String> userLiveData = new LiveData<String>(){
-//        publi
-//    };
     private final SharedPreferences prefs;
-    public String val;
+
+    private String textValue;
+    private Charset charset;
 
     public SupplyTextViewModel(@NonNull Application application) {
         super(application);
         prefs = application.getSharedPreferences(SupplyTextViewModel.class.getName(), Context.MODE_PRIVATE);
-        val = prefs.getString("inputText","");
+        textValue = prefs.getString("textValue", "");
+        charset = Charset.forName(prefs.getString("charset", Charset.defaultCharset().name()));//TODO: throws UnsupportedCharsetException
     }
 
 
     @Override
     protected void onCleared() {
         super.onCleared();
-        if(!prefs.edit().putString("inputText", val).commit()) {
-            throw new IllegalStateException("commit failed");
+        if (!
+                prefs.edit()
+                        .putString("textValue", textValue)
+                        .putString("charset", charset.name())
+                        .commit()) {
+            throw new IllegalStateException("commit failed");//TODO: where does this bubble to?
         }
     }
+
+    public void setTextValue(String textValue) {//TODO: synchronized? volatile?
+        this.textValue = textValue;
+    }
+
+    public void setCharset(Charset charset) {//TODO: synchronized? volatile?
+        this.charset = charset;
+    }
+
+    String getTextValue() {
+        return this.textValue;
+    }
+
+    Charset getCharset() {
+        return this.charset;
+    }
+
 }

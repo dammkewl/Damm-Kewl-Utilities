@@ -128,7 +128,7 @@
                 app:srcCompat="@android:drawable/ic_menu_help" />
 
             <fragment
-                android:id="@+id/fragment"
+                android:id="@+id/supplyHashInputTextFragment"
                 android:name="nl.damm.util.hash.SupplyTextFragment"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -137,7 +137,8 @@
                 android:layout_marginEnd="8dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/floatingActionButton" />
+                app:layout_constraintTop_toBottomOf="@+id/floatingActionButton"
+                tools:layout="@layout/supply_text_fragment" />
 
             <Button
                 android:id="@+id/button2"
@@ -148,7 +149,7 @@
                 android:onClick="hashMe"
                 android:text="Hash it"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/fragment" />
+                app:layout_constraintTop_toBottomOf="@+id/supplyHashInputTextFragment" />
 
             <EditText
                 android:id="@+id/hashOutputText"
@@ -161,7 +162,7 @@
                 android:inputType="textPersonName"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/button2"
-                app:layout_constraintTop_toBottomOf="@+id/fragment" />
+                app:layout_constraintTop_toBottomOf="@+id/supplyHashInputTextFragment" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
