@@ -12,6 +12,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import org.conscrypt.OpenSSLMessageDigestJDK;
 
 import java.math.BigInteger;
+import java.nio.ByteBuffer;
+import java.nio.charset.Charset;
 import java.security.MessageDigest;
 import java.security.MessageDigestSpi;
 import java.security.NoSuchAlgorithmException;
@@ -31,6 +33,8 @@ import nl.damm.util.R;
 import nl.damm.util.file.FilePickerActivity;
 import nl.damm.util.stream.Collectors;
 
+import static nl.damm.util.string.NumberRepresentationConversions.makeItHappen;
+import static nl.damm.util.string.NumberRepresentationConversions.toHexByteOrderBigEndianLowerCase;
 import static nl.damm.util.widget.SpinnerUtils.spinMeUp;
 
 public class HashAnythingActivity extends AppCompatActivity {
@@ -70,7 +74,7 @@ public class HashAnythingActivity extends AppCompatActivity {
                         services
                 );
 
-                //preselect algo's we can actually do something with (maybe filter the shit ones too?)
+                //preselect algo's we can actually do something with (maybe filter the rest?)
                 for(int i = 0; i < services.length; ++i) {
                     try {
                         if(MessageDigest.class.isAssignableFrom(Class.forName(services[i].getClassName()))) {
@@ -100,21 +104,21 @@ public class HashAnythingActivity extends AppCompatActivity {
 
     public void hashMe(View view) throws NoSuchAlgorithmException {
         Spinner spinner = findViewById(R.id.hashServiceSpinner);
-        System.out.println("SPINNER HEIGHT"+spinner.getHeight());
         Service service = (Service) spinner.getSelectedItem();
 
         SupplyTextViewModel model = SupplyTextFragment.getModel(this, R.id.supplyHashInputTextFragment);
         
         TextView outText = findViewById(R.id.hashOutputText);//EditText?
         Object serviceItem = service.newInstance(null);
-        for(Class<?> x = serviceItem.getClass(); x != null; x = x.getSuperclass()) {
-            System.out.println("diggity: "+x.getCanonicalName());
-        }
+
         MessageDigestSpi digest = (MessageDigestSpi) serviceItem;
         if(digest instanceof MessageDigest) {
-            byte[] outBytes = ((MessageDigest)digest).digest(model.getCharset().encode(model.getTextValue()).array());
-
-            outText.setText(new BigInteger(outBytes).toString(16));
+            ByteBuffer bb = model.getCharset().encode(model.getTextValue());
+            byte[] arr = bb.array();
+            byte[] target = new byte[bb.limit()-bb.arrayOffset()];
+            System.arraycopy(arr, bb.arrayOffset(), target, 0, target.length);
+            byte[] outBytes = ((MessageDigest)digest).digest(target);
+            outText.setText(toHexByteOrderBigEndianLowerCase(outBytes));
         } else if(digest instanceof OpenSSLMessageDigestJDK) {
             throw new IllegalStateException("No support yet for conscrypt");
         } else {

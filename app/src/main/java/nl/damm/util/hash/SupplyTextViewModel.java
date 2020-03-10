@@ -11,9 +11,11 @@ import java.nio.charset.Charset;
 
 public class SupplyTextViewModel extends AndroidViewModel {
 
-    private final SharedPreferences prefs;
+    private final SharedPreferences prefs;//is it okay to keep this ref?
 
+    @NonNull
     private String textValue;
+    @NonNull
     private Charset charset;
 
     public SupplyTextViewModel(@NonNull Application application) {
@@ -31,23 +33,25 @@ public class SupplyTextViewModel extends AndroidViewModel {
                 prefs.edit()
                         .putString("textValue", textValue)
                         .putString("charset", charset.name())
-                        .commit()) {
+                        .commit()) {//TODO: what are the fail states?
             throw new IllegalStateException("commit failed");//TODO: where does this bubble to?
         }
     }
 
-    public void setTextValue(String textValue) {//TODO: synchronized? volatile?
+    public void setTextValue(@NonNull String textValue) {//TODO: synchronized? volatile?
         this.textValue = textValue;
     }
 
-    public void setCharset(Charset charset) {//TODO: synchronized? volatile?
+    public void setCharset(@NonNull Charset charset) {//TODO: synchronized? volatile?
         this.charset = charset;
     }
 
+    @NonNull
     String getTextValue() {
         return this.textValue;
     }
 
+    @NonNull
     Charset getCharset() {
         return this.charset;
     }

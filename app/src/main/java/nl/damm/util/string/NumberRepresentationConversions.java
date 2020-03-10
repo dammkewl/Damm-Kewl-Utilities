@@ -1,5 +1,9 @@
 package nl.damm.util.string;
 
+import java.math.BigInteger;
+import java.security.MessageDigest;
+import java.util.stream.IntStream;
+
 public class NumberRepresentationConversions {
 
     private final static char[] digitsLower = {
@@ -11,20 +15,32 @@ public class NumberRepresentationConversions {
             'u' , 'v' , 'w' , 'x' , 'y' , 'z'
     };
 
-    public static String toHexBigEndianLowerCase(final byte[] bytes) {
+    public static String toHexByteOrderBigEndianLowerCase(final byte[] bytes) {
         final StringBuilder sb = new StringBuilder(bytes.length*2);
         for(int i = 0; i < bytes.length; ++i) {
-            sb.append(Integer.toHexString(bytes[i]&0x0FF));
+            String add = Integer.toHexString(bytes[i]&0x0FF);
+            if(add.length() == 1) {
+                sb.append("0");
+            }
+            sb.append(add);
         }
         return sb.toString();
     }
 
-    public static String toHexLittleEndianLowerCase(final byte[] bytes) {
+    public static String toHexByteOrderLittleEndianLowerCase(final byte[] bytes) {
         final StringBuilder sb = new StringBuilder(bytes.length*2);
         for(int i = bytes.length-1; i >= 0 ; --i) {
-            sb.append(Integer.toHexString(bytes[i]&0x0FF));
+            String add = Integer.toHexString(bytes[i]&0x0FF);
+            if(add.length() == 1) {
+                sb.append("0");
+            }
+            sb.append(add);
         }
         return sb.toString();
+    }
+
+    public static String makeItHappen(byte[] bytes) {
+        return new BigInteger(bytes).toString(16);
     }
 
 }
