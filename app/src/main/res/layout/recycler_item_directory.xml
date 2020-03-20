@@ -14,5 +14,5 @@
         android:layout_marginTop="8dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/itemFileDark" />
+        app:srcCompat="@drawable/item_file_dark" />
 </androidx.constraintlayout.widget.ConstraintLayout>
